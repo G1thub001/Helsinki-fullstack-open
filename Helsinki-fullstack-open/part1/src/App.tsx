@@ -5,11 +5,11 @@ function Header({course}: HeaderProps) {
   return  <h1>{course}</h1> 
 }
 
-type Partprops = {
+type PartProps = {
   name: string
   exercises: number
 }
-function Part({name, exercises}: Partprops) {
+function Part({name, exercises}: PartProps) {
   return (
     <div>
       <p>
@@ -19,20 +19,17 @@ function Part({name, exercises}: Partprops) {
   )
 }
 
-type Contentprops = {
-  part1: string
-  exercises1: number
-  part2: string
-  exercises2: number
-  part3: string
-  exercises3: number
+type ContentProps = {
+  part1: PartProps
+  part2: PartProps
+  part3: PartProps
 }
-function Content({part1, exercises1, part2, exercises2, part3, exercises3}: Contentprops) {
+function Content({part1, part2, part3}: ContentProps) {
   return (
     <div>
-      <Part name={part1} exercises={exercises1} />
-      <Part name={part2} exercises={exercises2} />
-      <Part name={part3} exercises={exercises3} />
+      <Part name={part1.name} exercises={part1.exercises} />
+      <Part name={part2.name} exercises={part2.exercises} />
+      <Part name={part3.name} exercises={part3.exercises} />
     </div>
   )
 }
@@ -53,21 +50,30 @@ function Total({exercises1, exercises2, exercises3}: TotalProps) {
 
 function App() {
   const course = "Half stack application development"
+  const part1={
+    name: "Fundamental of React",
+    exercises: 10
+  }
+  const part2={
+    name: "Using props to pass data",
+    exercises: 7
+  }
+  const part3={
+    name: "State of a component",
+    exercises: 14
+  }
   return (
     <div>
       <Header course={course} />
       <Content 
-        part1="Fundamental  of React" 
-        exercises1={10}
-        part2="Using props to pass data"
-        exercises2={7}
-        part3="State of a component"
-        exercises3={14}
+        part1={part1} 
+        part2={part2}
+        part3={part3}
        />
       <Total 
-        exercises1={10}
-        exercises2={7}
-        exercises3={14}
+        exercises1={part1.exercises}
+        exercises2={part2.exercises}
+        exercises3={part3.exercises}
       />
     </div>
   )
