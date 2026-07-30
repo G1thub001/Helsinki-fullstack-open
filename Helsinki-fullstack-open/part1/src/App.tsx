@@ -48,9 +48,10 @@ function Total({exercises1, exercises2, exercises3}: TotalProps) {
 
 function App() {
   
-  const course= "Half stack application development" 
+  const course= {
+    name: "Half stack application development",
 
-  const  parts= [
+   parts: [
     {
       name: "Fundamental of React",
       exercises: 10
@@ -63,18 +64,18 @@ function App() {
       name: "State of a component",
       exercises: 14
     }
-  ]
-  
+   ]
+  }
   return (
     <div>
-      <Header course={course} />
+      <Header course={course.name} />
       <Content 
-       parts= {parts}
+       parts= {course.parts}
        />
       <Total 
-        exercises1={parts[0].exercises}
-        exercises2={parts[1].exercises}
-        exercises3={parts[2].exercises}
+        exercises1={course.parts[0].exercises}
+        exercises2={course.parts[1].exercises}
+        exercises3={course.parts[2].exercises}
       />
     </div>
   )
