@@ -54,14 +54,20 @@ type StatisticsProps = {
   good: number
   neutral: number
   bad: number
+  all: number
+  positive: number
+  average: number
 }
-function Statistics({ good, neutral, bad }: StatisticsProps) {
+function Statistics({ good, neutral, bad, all, positive, average }: StatisticsProps) {
   
   return (
     <>
       <p>Good {good}</p>
       <p>Neutral {neutral}</p>
       <p>Bad {bad}</p>
+      <p>All {all}</p>
+      <p>Positive {positive}%</p>
+      <p>Average {average}</p>
     </>
   )
 
@@ -82,6 +88,10 @@ const handleBad = () => {
   setBad(bad + 1)
 }
 
+const all = good + neutral + bad
+const average = all / 3
+const positive = (good - bad) / all * 100
+
 return (
   <div>
     <Heading 
@@ -101,6 +111,9 @@ return (
      good={good}
      neutral={neutral}
      bad={bad}
+      all={all}
+      positive={positive}
+      average={average}
     />
   </div>
 )
