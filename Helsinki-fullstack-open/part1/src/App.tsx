@@ -50,28 +50,51 @@ function Feedback({onGood, onNeutral, onBad}: FeedbackProps) {
 
 }
 
+
+
 type StatisticsProps = {
-  good: number
+ good: number
   neutral: number
   bad: number
   all: number
-  positive: number
   average: number
+  positive: number
 }
-function Statistics({ good, neutral, bad, all, positive, average }: StatisticsProps) {
-  
+function Statistics({ good, neutral, bad, all, average, positive }: StatisticsProps) {
+  if (all === 0) {
+  return <p>No feedback given</p>
+}
   return (
-    <>
-      <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
-      <p>Bad {bad}</p>
-      <p>All {all}</p>
-      <p>Positive {positive}%</p>
-      <p>Average {average}</p>
-    </>
+     
+    <table>
+      <tbody>
+    
+    <StatisticLine text="Good" value={good} />
+    <StatisticLine text="Neutral" value={neutral} />
+    <StatisticLine text="Bad" value={bad} />
+    <StatisticLine text="All" value={all} />
+    <StatisticLine text="Average" value={average} />
+    <StatisticLine text="Positive" value={positive} />
+      </tbody>
+    </table>
   )
 
 }
+
+type StatisticLineProps = {
+  text: string
+  value: number
+}
+function StatisticLine({text, value}: StatisticLineProps) {
+  return (
+    <tr>
+      <td> {text} </td>
+      <td> {value} </td>
+    </tr>
+  )
+}
+
+
 
 function App() {
 const [good, setGood] = useState(0)
@@ -89,17 +112,15 @@ const handleBad = () => {
 }
 
 const all = good + neutral + bad
-const average = all / 3
-const positive = (good - bad) / all * 100
+const average = (good - bad) / all
+const positive = (good / all) * 100
 
 return (
   <div>
     <Heading 
     heading= "give feedback"
     />
-    <Heading
-    heading= "statistics"
-    />
+    
    
 
     <Feedback 
@@ -107,6 +128,10 @@ return (
       onNeutral={handleNeutral}
       onBad={handleBad}
     /> 
+
+    <Heading
+    heading= "statistics"
+    />
     <Statistics
      good={good}
      neutral={neutral}
@@ -119,7 +144,3 @@ return (
 )
 }
 export default App
-  
-
-
-
