@@ -20,8 +20,14 @@ function Button({text, handleClick}: ButtonProps) {
   )
 }
 
+
+
+
 function App() {
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0])
+
+  
 
 const anecdotes = [
   'If it hurts, do it more often.',
@@ -40,16 +46,29 @@ const anecdotes = [
    
   }
 
+  const voteAnecdote = () => {
+    const newVotes = [...votes]
+    newVotes[selected] += 1
+    setVotes(newVotes)
+  }
+
   return (
     <div>
       <Heading 
       heading="Anecdote of the day" 
       />
       <p>{anecdotes[selected]}</p>
+       <p>has {votes[selected]} votes</p>
+
       <Button 
-      text="Next anecdote" handleClick={randomAnecdote}
+      text="Next anecdote"
+      handleClick={randomAnecdote} />
+      <Button
+      text="Vote" 
+      handleClick={voteAnecdote}
        />
-    </div>)
+    </div>
+    )
 
   
   
