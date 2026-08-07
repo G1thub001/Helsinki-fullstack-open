@@ -26,6 +26,8 @@ function Button({text, handleClick}: ButtonProps) {
 function App() {
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0])
+  
+
 
   
 
@@ -52,6 +54,11 @@ const anecdotes = [
     setVotes(newVotes)
   }
 
+  
+
+  const highestVotes = Math.max(...votes)
+  const highestVotesIndex = votes.indexOf(highestVotes)
+
   return (
     <div>
       <Heading 
@@ -59,6 +66,9 @@ const anecdotes = [
       />
       <p>{anecdotes[selected]}</p>
        <p>has {votes[selected]} votes</p>
+
+       <p> {anecdotes[highestVotesIndex]} has the most votes with {highestVotes} votes</p>
+       <p> {votes[highestVotesIndex]} votes</p>
 
       <Button 
       text="Next anecdote"
