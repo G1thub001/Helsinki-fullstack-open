@@ -50,12 +50,9 @@ type TotalProps = {
   parts: Part[]
 }
 function Total({ parts }: TotalProps) {
-  const total=
-  parts[0].exercises+
-  parts[1].exercises+
-  parts[2].exercises
+  const total = parts.reduce((sum, part) => sum + part.exercises, 0)
   return (
-    <p>Number of exercises {total}</p>
+    <strong>  Total exercises: {total}</strong>
   )
 }
 

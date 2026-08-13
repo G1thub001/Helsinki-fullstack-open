@@ -1,90 +1,91 @@
-import {useState} from 'react'
 
-type HeadingProps = {
+
+ type HeadingProps= {
   heading: string
-}
-function Heading({heading}: HeadingProps) {
+ }
+ 
+function Header({heading}: HeadingProps) {
   return <h1>{heading}</h1>
+
 }
 
-type ButtonProps = {
-  text: string
-  handleClick: () => void
-}
-function Button({text, handleClick}: ButtonProps) {
 
+type Part = {
+  id: number
+  name: string
+  exercises: number
+}
+type PartProps = {
+  part: Part
+  }
+
+function Part({part}: PartProps) {
+return ( 
+  <h1>
+{part.name} {part.exercises}
+  </h1>
+)
+}
+
+type Course = {
+  name: string
+  parts: Part[]
+}
+type CourseProps = {
+  course: Course
+}
+function Course({course}: CourseProps) {
   return (
-    <button onClick={handleClick}>
-      {text}
-    </button>
+    <div>
+      <Header heading={course.name} />
+      {course.parts.map((part) => (
+        <Part key={part.id} part={part} />
+      ))}
+      <Total parts={course.parts} />
+    </div>
+  )
+ 
+}
+type TotalProps = {
+  parts: Part[]
+}
+function Total({ parts }: TotalProps) {
+  const total=
+  parts[0].exercises+
+  parts[1].exercises+
+  parts[2].exercises
+  return (
+    <p>Number of exercises {total}</p>
   )
 }
 
-
-
-
 function App() {
-  const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState([0, 0, 0, 0, 0, 0])
-  
-
-
-  
-
-const anecdotes = [
-  'If it hurts, do it more often.',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-]
-
-
-  const randomAnecdote = () => {
-   
-    const randomIndex = Math.floor(Math.random() * anecdotes.length)
-    setSelected(randomIndex)
-   
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10,
+        id: 1
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7,
+        id: 2
+      },
+      {
+        name: 'State of a component',
+        exercises: 14,
+        id: 3
+      }
+    ]
   }
-
-  const voteAnecdote = () => {
-    const newVotes = [...votes]
-    newVotes[selected] += 1
-    setVotes(newVotes)
-  }
-
-  
-
-  const highestVotes = Math.max(...votes)
-  const highestVotesIndex = votes.indexOf(highestVotes)
 
   return (
     <div>
-      <Heading 
-      heading="Anecdote of the day" 
-      />
-      <p>{anecdotes[selected]}</p>
-       <p>has {votes[selected]} votes</p>
-
-       <p> {anecdotes[highestVotesIndex]} has the most votes with {highestVotes} votes</p>
-       <p> {votes[highestVotesIndex]} votes</p>
-
-      <Button 
-      text="Next anecdote"
-      handleClick={randomAnecdote} />
-      <Button
-      text="Vote" 
-      handleClick={voteAnecdote}
-       />
+      <Course course={course} />
     </div>
-    )
-
-  
-  
+  )
 }
 
-export default App
-
-  
-
+export default App  
