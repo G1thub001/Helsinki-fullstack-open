@@ -1,8 +1,24 @@
-
+import { useState } from 'react'
 
 import Course from './Course'
 
 function App() {
+
+const [persons, setPersons] = useState([{name: 'Arto Hellas'}])
+
+const [newName, setNewName] = useState('')
+const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault()
+  const newPerson = {
+    name: newName,
+  }
+
+  setPersons(persons.concat(newPerson))
+  setNewName('')
+}
+const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  setNewName(event.target.value)
+}
   const courses = [
     {
       id: 1,
@@ -55,8 +71,23 @@ function App() {
     <Course key={course.id} course={course} />
   ))
   }
+
+  <form onSubmit={addPerson}>
+    <input value={newName} onChange={handleNameChange} />
+    <button type="submit">add</button>
+  </form>
+
+  <ul>  
+    {persons.map((person) => (
+      <li key={person.name}>{person.name}</li>
+    ))}
+  </ul>
+
     </div>
   )
 }
 
 export default App  
+
+
+
