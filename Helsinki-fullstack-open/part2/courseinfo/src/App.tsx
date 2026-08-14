@@ -4,11 +4,15 @@ import Course from './Course'
 
 function App() {
 
-const [persons, setPersons] = useState([{name: 'Arto Hellas'}])
+const [persons, setPersons] = useState([{name: 'Arto Hellas', number: '040-123456'}])
 
 const [newName, setNewName] = useState('')
+const [newNumber, setNewNumber] = useState('')
+
 const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault()
+
+
 
     const alreadyExists= persons.some( 
     person => person.name === newName
@@ -20,10 +24,16 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
   }
   const newPerson = {
     name: newName,
+    number: newNumber,
   }
 
   setPersons(persons.concat(newPerson))
   setNewName('')
+  setNewNumber('')
+}
+
+const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement> ) => {
+  setNewNumber(event.target.value)
 }
 const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setNewName(event.target.value)
@@ -82,17 +92,24 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   }
 
   <form onSubmit={addPerson}>
+    <div>
     <input value={newName} onChange={handleNameChange} />
+    </div>
+    <div>
+      <input value = {newNumber} onChange={handleNumberChange} />
+    </div>
     <button type="submit">add</button>
   </form>
 
   <ul>  
     {persons.map((person) => (
-      <li key={person.name}>{person.name}</li>
+      <li key={person.name}>
+        {person.name} {person.number}</li>
+     
     ))}
   </ul>
-
-    </div>
+ 
+   </div>
   )
 }
 
