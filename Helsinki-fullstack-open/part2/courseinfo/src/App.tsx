@@ -8,6 +8,12 @@ const [persons, setPersons] = useState([{name: 'Arto Hellas', number: '040-12345
 
 const [newName, setNewName] = useState('')
 const [newNumber, setNewNumber] = useState('')
+const [search, setSearch] = useState('')
+
+const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  setSearch(event.target.value)
+} 
+
 
 const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault()
@@ -83,6 +89,8 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     }
   ]
 
+  const personsToShow = persons.filter((person) => 
+    person.name.toLowerCase().includes(search.toLowerCase()))
   return (
     <div>
        {
@@ -98,11 +106,14 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     <div>
       <input value = {newNumber} onChange={handleNumberChange} />
     </div>
+    <div> 
+      <input value={search} onChange={handleSearchChange} />
+    </div>
     <button type="submit">add</button>
   </form>
 
   <ul>  
-    {persons.map((person) => (
+    {personsToShow.map((person) => (
       <li key={person.name}>
         {person.name} {person.number}</li>
      
