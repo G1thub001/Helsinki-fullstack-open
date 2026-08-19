@@ -1,6 +1,9 @@
 import { useState } from 'react'
 
 import Course from './Course'
+import  Filter from './Filter'
+import PersonForm from './PersonForm'
+import Persons from './Persons'
 
 function App() {
 
@@ -14,11 +17,8 @@ const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setSearch(event.target.value)
 } 
 
-
 const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault()
-
-
 
     const alreadyExists= persons.some( 
     person => person.name === newName
@@ -99,31 +99,24 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   ))
   }
 
-  <form onSubmit={addPerson}>
-    <div>
-    <input value={newName} onChange={handleNameChange} />
-    </div>
-    <div>
-      <input value = {newNumber} onChange={handleNumberChange} />
-    </div>
-    <div> 
-      <input value={search} onChange={handleSearchChange} />
-    </div>
-    <button type="submit">add</button>
-  </form>
+  <Filter 
+   search={search} 
+   handleSearchChange={handleSearchChange} 
+   />
+  <PersonForm 
+    newName= {newName}
+    newNumber= {newNumber}
+    handleNameChange={handleNameChange}
+    handleNumberChange={handleNumberChange}
+    addPerson= {addPerson}
+     />
+  
+ <Persons personsToShow={personsToShow} />
 
-  <ul>  
-    {personsToShow.map((person) => (
-      <li key={person.name}>
-        {person.name} {person.number}</li>
-     
-    ))}
-  </ul>
- 
-   </div>
+    </div>
   )
-}
 
+}
 export default App  
 
 
