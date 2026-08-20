@@ -26,24 +26,40 @@ const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault()
 
-    const alreadyExists= persons.some( 
-    person => person.name === newName
-  )
-
-  if(alreadyExists) {
-    alert(`${newName} is already added to phonebook`)
-      return
-  }
-const newPerson = {
+  const newPerson = {
   name: newName,
   number: newNumber
 }
-  personService.create(newPerson)
+
+    const alreadyExisting= persons.find( 
+    person => person.name === newName
+  )
+
+  if(alreadyExisting) {
+       personService
+       .update(alreadyExisting.id, newPerson)
+       .then(response =>{
+        setPersons(
+          persons.map(person => 
+            person.id===alreadyExisting.id
+            ? response.data
+            : person
+          )
+        )
+       })
+  }
+
+  else{
+    personService
+    .create(newPerson)
     .then(response => {
       setPersons(persons.concat(response.data))
       setNewName('')
       setNewNumber('')
-})
+    }
+    )
+
+  }
 
 
 }
