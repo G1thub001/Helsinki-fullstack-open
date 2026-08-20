@@ -34,9 +34,20 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
     alert(`${newName} is already added to phonebook`)
       return
   }
- 
-  setNewName('')
-  setNewNumber('')
+const newPerson = {
+  name: newName,
+  number: newNumber
+}
+  axios
+    .post('http://localhost:3001/persons', newPerson)
+    .then(response => {
+      setPersons(persons.concat(response.data))
+    
+      setNewName('')
+      setNewNumber('')
+})
+
+  
 }
 
 const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement> ) => {
