@@ -8,14 +8,16 @@ id: string
 
 type PersonsProps = {
     personsToShow: PersonType[]
+    onDelete: (id: string) => void
 
 }
 
-function Persons({personsToShow}: PersonsProps) {
+function Persons({personsToShow, onDelete}: PersonsProps) {
     return (
         <ul>
             {personsToShow.map(person => 
-                <Person key={person.name} person={person} />
+                <Person key={person.id} person={person} onDelete={onDelete}/>
+
             )}
         </ul>
     )

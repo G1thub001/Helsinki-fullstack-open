@@ -6,13 +6,19 @@ type Person = {
 
 type PersonProps = {
     person: Person
+    onDelete: (id: string) => void
 }
 
-function Person({person}: PersonProps) {
+function Person({person, onDelete}: PersonProps) {
     return (
         <li> 
-            {person.name} {person.number}
+            {person.id} {person.number}
+            <button onClick={() => onDelete(person.id)}>
+            delete
+            </button>
         </li>
+
+        
     )
        
 }

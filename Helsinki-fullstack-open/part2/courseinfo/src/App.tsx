@@ -45,8 +45,13 @@ const newPerson = {
       setNewNumber('')
 })
 
-  
+
 }
+
+const handleDelete= (id: string) =>
+  personService
+  .remove(id)
+  .then(()=>{setPersons(persons.filter(person=> person.id !==id))}) 
 
 const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement> ) => {
   setNewNumber(event.target.value)
@@ -131,7 +136,7 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     addPerson= {addPerson}
      />
   
- <Persons personsToShow={personsToShow} />
+ <Persons personsToShow={personsToShow} onDelete= {handleDelete} />
 
     </div>
   )
