@@ -24,6 +24,11 @@
       "name": "keith",
       "number": "13-15-1235789",
       "id": "H2MugSRpz9U"
+    },
+    {
+      "name": "brian",
+      "number": "0715858179",
+      "id": "ei5WMrp1k98"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

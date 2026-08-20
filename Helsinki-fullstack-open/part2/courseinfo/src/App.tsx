@@ -4,7 +4,7 @@ import Course from './Course'
 import  Filter from './Filter'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
-import axios from 'axios'
+import personService from './services/persons'
 
 type Person = {
   name: string
@@ -38,11 +38,9 @@ const newPerson = {
   name: newName,
   number: newNumber
 }
-  axios
-    .post('http://localhost:3001/persons', newPerson)
+  personService.create(newPerson)
     .then(response => {
       setPersons(persons.concat(response.data))
-    
       setNewName('')
       setNewNumber('')
 })
@@ -107,8 +105,8 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
 
   useEffect(() => {
-  axios
-    .get('http://localhost:3001/persons')
+  personService
+    .getAll()
     .then(response => {
       setPersons(response.data)
     })
