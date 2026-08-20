@@ -1,13 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import Course from './Course'
 import  Filter from './Filter'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
+import axios from 'axios'
 
+type Person = {
+  name: string
+  number: string
+  id: string
+}
 function App() {
 
-const [persons, setPersons] = useState([{name: 'Arto Hellas', number: '040-123456'}])
+const [persons, setPersons] = useState<Person[]>([])
 
 const [newName, setNewName] = useState('')
 const [newNumber, setNewNumber] = useState('')
@@ -28,12 +34,7 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
     alert(`${newName} is already added to phonebook`)
       return
   }
-  const newPerson = {
-    name: newName,
-    number: newNumber,
-  }
-
-  setPersons(persons.concat(newPerson))
+ 
   setNewName('')
   setNewNumber('')
 }
@@ -91,6 +92,16 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
   const personsToShow = persons.filter((person) => 
     person.name.toLowerCase().includes(search.toLowerCase()))
+
+
+
+  useEffect(() => {
+  axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      setPersons(response.data)
+    })
+}, [])
   return (
     <div>
        {
