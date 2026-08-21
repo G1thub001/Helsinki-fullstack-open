@@ -5,6 +5,7 @@ import  Filter from './Filter'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
 import personService from './services/persons'
+import Notification from './Notification'
 
 type Person = {
   name: string
@@ -18,6 +19,7 @@ const [persons, setPersons] = useState<Person[]>([])
 const [newName, setNewName] = useState('')
 const [newNumber, setNewNumber] = useState('')
 const [search, setSearch] = useState('')
+const [message, setMessage] = useState<string | null>(null)
 
 const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setSearch(event.target.value)
@@ -39,11 +41,15 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
        personService
        .update(alreadyExisting.id, newPerson)
        .then(response =>{
+        setMessage(`${newName}'s number updated`)
+        setTimeout(()=> {setMessage(null)}, 5000)
         setPersons(
+          
           persons.map(person => 
             person.id===alreadyExisting.id
             ? response.data
             : person
+            
           )
         )
        })
@@ -54,6 +60,8 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
     .create(newPerson)
     .then(response => {
       setPersons(persons.concat(response.data))
+      setMessage(`${newName} added`)
+      setTimeout(()=> {setMessage(null)}, 5000)
       setNewName('')
       setNewNumber('')
     }
@@ -64,10 +72,27 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
 
 }
 
-const handleDelete= (id: string) =>
+const handleDelete = (id: string) => {
+  const person = persons.find(person => person.id === id)
+
   personService
-  .remove(id)
-  .then(()=>{setPersons(persons.filter(person=> person.id !==id))}) 
+    .remove(id)
+    .then(() => {
+      setPersons(persons.filter(person => person.id !== id))
+      setMessage(`${person?.name} deleted`)
+
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    })
+    .catch(() => {
+      setMessage('Something went wrong')
+
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    })
+}
 
 const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement> ) => {
   setNewNumber(event.target.value)
@@ -132,8 +157,11 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setPersons(response.data)
     })
 }, [])
+
   return (
     <div>
+      
+      <Notification message= {message} />
        {
    courses.map((course) => (
     <Course key={course.id} course={course} />
@@ -153,6 +181,9 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
      />
   
  <Persons personsToShow={personsToShow} onDelete= {handleDelete} />
+
+ 
+
 
     </div>
   )

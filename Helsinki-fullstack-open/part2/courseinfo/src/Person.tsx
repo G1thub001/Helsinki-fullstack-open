@@ -11,7 +11,8 @@ type PersonProps = {
 
 function Person({person, onDelete}: PersonProps) {
     return (
-        <li> 
+        <li className="person"> 
+            
             {person.id} {person.number}
             <button onClick={() => onDelete(person.id)}>
             delete
