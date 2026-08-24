@@ -1,5 +1,7 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import countryService from './services/countries'
+import weatherService from './services/weather'
+
 
 type Country = {
   cca3: string
@@ -18,10 +20,20 @@ type Country = {
     svg: string
   }
 }
+type Weather = {
+  main: {
+    temp: number
+  }
+  weather: {
+    description: string
+    icon: string
+  }[]
+}
 
 function App() {
   const [search, setSearch] = useState('')
   const [countries, setCountries] = useState<Country[]>([])
+  const [weather, setWeather] = useState<Weather | null>(null)
 
   const handleSearchChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -46,6 +58,16 @@ function App() {
       setCountries(matches)
     })
 }
+
+useEffect(() => {
+  if (countries.length === 1) {
+    weatherService
+      .getWeather(countries[0].capital[0])
+      .then(response => {
+        setWeather(response.data)
+      })
+  }
+}, [countries])
 
 const showCountry = (country: Country) => {
   setCountries([country])
@@ -97,6 +119,22 @@ const showCountry = (country: Country) => {
       ))}
     </ul>
   </div>
+)}
+
+{weather && (
+  <div>
+    <h3>Weather in {countries[0].capital[0]}</h3>
+
+    <p>temperature {weather.main.temp} °C</p>
+
+    <p>{weather.weather[0].description}</p>
+
+    <img
+  src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+  alt={weather.weather[0].description}
+/>
+  </div>
+  
 )}
   </div>
   )
