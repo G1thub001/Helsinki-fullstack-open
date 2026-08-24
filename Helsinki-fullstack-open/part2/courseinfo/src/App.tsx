@@ -1,204 +1,87 @@
-import { useState, useEffect } from 'react'
+import {useState} from 'react'
+import countryService from './services/countries'
 
-import Course from './Course'
-import  Filter from './Filter'
-import PersonForm from './PersonForm'
-import Persons from './Persons'
-import personService from './services/persons'
-import Notification from './Notification'
-
-type Person = {
-  name: string
-  number: string
-  id: string
+type Country = {
+  cca3: string
+  name: {
+    common: string
+    official: string
+  }
+  capital: string[]
+  area: number
+  population: number
+  languages: {
+    [key: string]: string
+  }
+  flags: {
+    png: string
+    svg: string
+  }
 }
+
 function App() {
+  const [search, setSearch] = useState('')
+  const [countries, setCountries] = useState<Country[]>([])
 
-const [persons, setPersons] = useState<Person[]>([])
-
-const [newName, setNewName] = useState('')
-const [newNumber, setNewNumber] = useState('')
-const [search, setSearch] = useState('')
-const [message, setMessage] = useState<string | null>(null)
-
-const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setSearch(event.target.value)
-} 
-
-const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault()
-
-  const newPerson = {
-  name: newName,
-  number: newNumber
-}
-
-    const alreadyExisting= persons.find( 
-    person => person.name === newName
-  )
-
-  if (alreadyExisting) {
-  personService
-    .update(alreadyExisting.id, newPerson)
-    .then(response => {
-      setMessage(`${newName}'s number updated`)
-
-      setPersons(
-        persons.map(person =>
-          person.id === alreadyExisting.id
-            ? response.data
-            : person
-        )
-      )
-
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    })
-    .catch(() => {
-      setMessage('Information of this person has already been removed')
-
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    })
-}
-
-  else{
-    personService
-    .create(newPerson)
-    .then(response => {
-      setPersons(persons.concat(response.data))
-      setMessage(`${newName} added`)
-      setTimeout(()=> {setMessage(null)}, 5000)
-      setNewName('')
-      setNewNumber('')
-    }
-    )
-
+  const handleSearchChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearch(event.target.value)
   }
 
+  const handleSearch = (
+  event: React.FormEvent<HTMLFormElement>
+) => {
+  event.preventDefault()
 
-}
-
-const handleDelete = (id: string) => {
-  const person = persons.find(person => person.id === id)
-
-  personService
-    .remove(id)
-    .then(() => {
-      setPersons(persons.filter(person => person.id !== id))
-      setMessage(`${person?.name} deleted`)
-
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    })
-    .catch(() => {
-      setMessage('Something went wrong')
-
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    })
-}
-
-const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement> ) => {
-  setNewNumber(event.target.value)
-}
-const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setNewName(event.target.value)
-}
-  const courses = [
-    {
-      id: 1,
-      name: 'Half Stack application development',
-      parts: [
-        {
-          name: 'Fundamentals of React',
-          exercises: 10,
-          id: 1
-        },
-        {
-          name: 'Using props to pass data',
-          exercises: 7,
-          id: 2
-        },
-        {
-          name: 'State of a component',
-          exercises: 14,
-          id: 3
-        },
-        {
-          name: 'Redux',
-          exercises: 11,
-          id: 4
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Node.js',
-      parts: [
-        {
-          name: 'Routing',
-          exercises: 3,
-          id: 1
-        },
-        {
-          name: 'Middlewares',
-          exercises: 7,
-          id: 2
-        }
-      ]
-    }
-  ]
-
-  const personsToShow = persons.filter((person) => 
-    person.name.toLowerCase().includes(search.toLowerCase()))
-
-
-
-  useEffect(() => {
-  personService
+  countryService
     .getAll()
     .then(response => {
-      setPersons(response.data)
+      const matches = response.data.filter((country: Country) =>
+        country.name.common
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
+
+      setCountries(matches)
     })
-}, [])
+}
 
   return (
     <div>
-      
-      <Notification message= {message} />
-       {
-   courses.map((course) => (
-    <Course key={course.id} course={course} />
-  ))
-  }
+      <form onSubmit={handleSearch}>
+        find countries:
+        <input
+          value={search}
+          onChange={handleSearchChange}
+        />
+        <button type="submit">search</button>
+      </form>
 
-  <Filter 
-   search={search} 
-   handleSearchChange={handleSearchChange} 
-   />
-  <PersonForm 
-    newName= {newName}
-    newNumber= {newNumber}
-    handleNameChange={handleNameChange}
-    handleNumberChange={handleNumberChange}
-    addPerson= {addPerson}
-     />
-  
- <Persons personsToShow={personsToShow} onDelete= {handleDelete} />
+{countries.length === 1 && (
+  <div>
+    <h2>{countries[0].name.common}</h2>
 
- 
+<img
+  src={countries[0].flags.png}
+  alt={`Flag of ${countries[0].name.common}`}
+/>
 
+    <p>capital {countries[0].capital}</p>
+    <p>area {countries[0].area}</p>
+    <p>population {countries[0].population}</p>
 
-    </div>
+    <h3>languages:</h3>
+    <ul>
+  {Object.values(countries[0].languages).map(language => (
+    <li key={language}>{language}</li>
+  ))}
+</ul>
+  </div>
+)}
+
+  </div>
   )
-
 }
-export default App  
 
-
-
+export default App
