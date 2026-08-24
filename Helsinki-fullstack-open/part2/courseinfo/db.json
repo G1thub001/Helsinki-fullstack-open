@@ -24,16 +24,6 @@
       "name": "brian",
       "number": "0715858179",
       "id": "ei5WMrp1k98"
-    },
-    {
-      "name": "4",
-      "number": "0789660700",
-      "id": "VSqxHctmAW0"
-    },
-    {
-      "name": "omachi",
-      "number": "",
-      "id": "PECmqld0j3U"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

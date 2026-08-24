@@ -37,23 +37,32 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
     person => person.name === newName
   )
 
-  if(alreadyExisting) {
-       personService
-       .update(alreadyExisting.id, newPerson)
-       .then(response =>{
-        setMessage(`${newName}'s number updated`)
-        setTimeout(()=> {setMessage(null)}, 5000)
-        setPersons(
-          
-          persons.map(person => 
-            person.id===alreadyExisting.id
+  if (alreadyExisting) {
+  personService
+    .update(alreadyExisting.id, newPerson)
+    .then(response => {
+      setMessage(`${newName}'s number updated`)
+
+      setPersons(
+        persons.map(person =>
+          person.id === alreadyExisting.id
             ? response.data
             : person
-            
-          )
         )
-       })
-  }
+      )
+
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    })
+    .catch(() => {
+      setMessage('Information of this person has already been removed')
+
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    })
+}
 
   else{
     personService
