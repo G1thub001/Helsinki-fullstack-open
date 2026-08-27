@@ -1,7 +1,7 @@
 type Person = {
     name: string
     number: string
-    id: string
+    _id: string
 }
 
 type PersonProps = {
@@ -9,18 +9,15 @@ type PersonProps = {
     onDelete: (id: string) => void
 }
 
-function Person({person, onDelete}: PersonProps) {
+function Person({ person, onDelete }: PersonProps) {
     return (
-        <li> 
+        <li>
             {person.name} {person.number}
-            <button onClick={() => onDelete(person.id)}>
-            delete
+            <button onClick={() => onDelete(person._id)}>
+                delete
             </button>
         </li>
-
-        
     )
-       
 }
 
 export default Person

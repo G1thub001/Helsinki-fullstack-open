@@ -9,7 +9,7 @@ import personService from './services/persons'
 type Person = {
   name: string
   number: string
-  id: string
+  _id: string
 }
 function App() {
 
@@ -37,11 +37,11 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
 
   if(alreadyExisting) {
        personService
-       .update(alreadyExisting.id, newPerson)
+       .update(alreadyExisting._id, newPerson)
        .then(response =>{
         setPersons(
           persons.map(person => 
-            person.id===alreadyExisting.id
+            person._id===alreadyExisting._id
             ? response.data
             : person
           )
@@ -67,7 +67,7 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
 const handleDelete= (id: string) =>
   personService
   .remove(id)
-  .then(()=>{setPersons(persons.filter(person=> person.id !==id))}) 
+  .then(()=>{setPersons(persons.filter(person=> person._id !==id))}) 
 
 const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement> ) => {
   setNewNumber(event.target.value)
