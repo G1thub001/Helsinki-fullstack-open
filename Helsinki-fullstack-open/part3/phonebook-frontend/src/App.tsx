@@ -18,6 +18,7 @@ const [persons, setPersons] = useState<Person[]>([])
 const [newName, setNewName] = useState('')
 const [newNumber, setNewNumber] = useState('')
 const [search, setSearch] = useState('')
+const [errorMessage, setErrorMessage] = useState('')
 
 const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   setSearch(event.target.value)
@@ -58,8 +59,12 @@ const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
       setNewNumber('')
     }
     )
-
+    .catch(error => {
+      setErrorMessage(error.response.data.error)
+    })
   }
+    
+  
 
 
 }
@@ -144,6 +149,9 @@ const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
    search={search} 
    handleSearchChange={handleSearchChange} 
    />
+
+    {errorMessage && <div>{errorMessage}</div>}
+
   <PersonForm 
     newName= {newName}
     newNumber= {newNumber}
