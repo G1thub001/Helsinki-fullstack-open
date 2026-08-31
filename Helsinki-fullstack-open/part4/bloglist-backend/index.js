@@ -1,52 +1,35 @@
-require('dotenv').config()
+const config = require('./utils/config')
 
 const express = require('express')
 const mongoose = require('mongoose')
 const dns = require('dns')
+const Blog = require('./models/blog')
+const blogRouter = require('./controllers/blogs')
+const logger = require('./utils/logger')
+const middleware = require('./utils/middleware')
 
 dns.setServers(['8.8.8.8', '1.1.1.1'])
 
 const app = express()
 
-const blogSchema = mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number,
-})
-
-const Blog = mongoose.model('Blog', blogSchema)
-
-// MongoDB connection will go here
-const url = process.env.MONGODB_URI
+const url = config.MONGODB_URI
 
 mongoose.connect(url)
   .then(() => {
-    console.log('connected to MongoDB')
+    logger.info('connected to MongoDB')
   })
   .catch(error => {
-    console.log('error connecting to MongoDB:', error.message)
+    logger.error('error connecting to MongoDB:', error.message)
   })
 
 app.use(express.json())
+app.use('/api/blogs', blogRouter)
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
-app.get('/api/blogs', (request, response) => {
-  Blog.find({}).then(blogs => {
-    response.json(blogs)
-  })
-})
 
-app.post('/api/blogs', (request, response) => {
-  const blog = new Blog(request.body)
-
-  blog.save().then(result => {
-    response.status(201).json(result)
-  })
-})
-
-// server startup will go here
-const PORT = process.env.PORT || 3003
-
+const PORT = config.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  logger.info(`Server running on port ${PORT}`)
 })
+
