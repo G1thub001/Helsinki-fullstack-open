@@ -103,6 +103,24 @@ test('a blog without likes defaults to zero', async () => {
   assert.strictEqual(response.body.likes, 0)
 })
 
+test('a blog with invalid likes is not added', async () => {
+  const newBlog = {
+    title: 'Blog with invalid likes',
+    author: 'John Doe',
+    url: 'https://example.com/invalid-likes',
+    likes: 'not-a-number'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+
+  assert.strictEqual(response.body.length, initialBlogs.length)
+})
+
 test.after(async () => {
   await mongoose.connection.close()
 })
