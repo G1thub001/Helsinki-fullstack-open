@@ -121,6 +121,21 @@ test('a blog with invalid likes is not added', async () => {
   assert.strictEqual(response.body.length, initialBlogs.length)
 })
 
+test('a blog without a url is not added', async () => {
+  const newBlog = {
+    author: 'John Doe',
+    likes: 5,
+    title: 'Blog without url'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  
+})
+
 test.after(async () => {
   await mongoose.connection.close()
 })
